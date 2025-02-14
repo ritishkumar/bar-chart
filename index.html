@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            background-color: #e5e5e5;
+        }
+        #sidebar {
+            width: 250px;
+            background: #1f2d3d;
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0px;
+            transition: left 0.3s ease-in-out;
+        }
+        .navbar{
+            background: #1f2d3d;
+            color: white;
+        }
+        .nav-link {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+        }
+        .nav-link i{
+            font-size: 20px;
+        }
+        .nav-link:hover {
+            background: #324759;
+            border-radius: 5px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+        .chart-card {
+            max-width: 400px;
+            margin: auto;
+        
+        }
+        .chart-card1 {
+            width: full;
+            margin: auto;
+        }
+        #right-sidebar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            right: 10px;
+            top: 200px;
+            gap: 20px;
+            padding: 10px;
+        }
+        #right-sidebar i {
+            font-size: 24px;
+            cursor: pointer;
+        }
+        #right-sidebar i:hover {
+            color: #007bff;
+        }
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Animation */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-section {
+            opacity: 0; 
+            transform: translateY(50px);
+            transition: all 0.6s ease-in-out;
+        }
+        
+        .content-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media(max-width:768px){
+            #sidebar{
+                transform: translate(-250px);
+            }
+            #content{
+                margin-left: 0;
+            }
+        }
+        #welcome-screen {
+            display: none; 
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: white;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 2000;
+        }
+        #welcome-screen h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        #open-dashboard {
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #open-dashboard:hover {
+            background: #0056b3;
+        }
+        
+        @media(max-width:768px) {
+            #sidebar {
+                transform: translateX(-250px);
+            }
+            #content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="welcome-screen">
+        <h1>Welcome to the Dashboard</h1>
+        <button id="open-dashboard">Open</button>
+    </div>
+
+    <!-- Left Sidebar -->
+    <nav id="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-search"></i> Search</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-database"></i> Database</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-person"></i> Profile</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"><i class="bi bi-gear"></i> Settings</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content">
+        <!-- Navbar -->
+        <nav class="navbar shadow-sm mb-4 d-flex justify-content-between px-3">
+            <i class="bi bi-stack fs-4" id="toggle-sidebar"></i>
+            <h1 class="h4 text-center flex-grow-1 m-0 text-center">Dashboard</h1>
+            <div>
+                <i class="bi bi-bell fs-5 me-3"></i>
+                <span>Admin Ritish</span>
+                <i class="bi bi-person-circle fs-5 ms-2"></i>
+            </div>
+        </nav>
+
+        <!-- Charts Section -->
+        <div class="row g-4 justify-content-center ">
+            <div class="col-md-4 content-section">
+                <div class="card chart-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Cases - 500</h5>
+                        <canvas id="totalCasesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 content-section">
+                <div class="card chart-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Request - 500</h5>
+                        <canvas id="totalRequestsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 content-section">
+                <div class="card chart-card1">
+                    <div class="card-body">
+                        <h5 class="card-title">Analysis</h5>
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div id="right-sidebar">
+        <i class="bi bi-people" ></i>
+        <i class="bi bi-map"></i>
+        <i class="bi bi-link-45deg"></i>
+        <i class="bi bi-power " id="power-icon"></i>
+    </div>
+   
+    <script>
+        document.getElementById("toggle-sidebar").addEventListener("click", function() {
+            const sidebar = document.getElementById("sidebar");
+            const content = document.getElementById("content");
+            if (sidebar.style.transform === "translateX(0px)") {
+                sidebar.style.transform = "translateX(-250px)";
+                content.style.marginLeft = "0";
+            } else {
+                sidebar.style.transform = "translateX(0px)";
+                content.style.marginLeft = "250px";
+            }
+        });
+
+        // Chart.js
+        const chart1 = document.getElementById('totalCasesChart').getContext('2d');
+        new Chart(chart1, {
+            type: 'doughnut',
+            data: {
+                labels: ['Successful', 'Pending', 'In Progress', 'Closed', 'Not Started'],
+                datasets: [{ data: [120, 90, 80, 110, 100], backgroundColor: ['blue', 'red', 'yellow', 'gray', 'orange'] }]
+            }
+        });
+
+        const chart2 = document.getElementById('totalRequestsChart').getContext('2d');
+        new Chart(chart2, {
+            type: 'doughnut',
+            data: {
+                labels: ['Successful', 'Pending', 'Approval', 'Not Sent', 'Rejected'],
+                datasets: [{ data: [40, 20, 10, 15, 15], backgroundColor: ['blue', 'red', 'yellow', 'gray', 'orange'] }]
+            }
+        });
+
+        const chart3 = document.getElementById('barChart').getContext('2d');
+        new Chart(chart3, {
+            type: 'bar',
+            data: {
+                labels: ['CDR', 'IPDR', 'PCAP', 'ISD'],
+                datasets: [{ label: 'Cases', data: [120, 90, 60, 100],
+                 backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',],
+    borderColor:[
+    'rgb(255, 99, 132)',
+    'rgb(255, 159, 64)',
+    'rgb(255, 205, 86)',
+    'rgb(75, 192, 192)',
+    ],
+borderWidth:1}]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+
+        // Scroll Animation
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('content-visible');
+                }
+            });
+        });
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            observer.observe(section);
+        });
+        window.onload = function () {
+            const powerIcon = document.getElementById('power-icon');
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const openButton = document.getElementById('open-dashboard');
+
+            if (!powerIcon || !welcomeScreen || !openButton) {
+                console.error("One or more elements are missing from the DOM.");
+                return;
+            }
+
+            // Show welcome screen when power icon is clicked
+            powerIcon.addEventListener("click", function () {
+                welcomeScreen.style.display = "flex";
+            });
+
+            // Hide welcome screen and return to dashboard when "Open" button is clicked
+            openButton.addEventListener("click", function () {
+                welcomeScreen.style.display = "none";
+            });
+        };
+    
+    </script>
+
+</body>
+</html>
