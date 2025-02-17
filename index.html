@@ -22,10 +22,17 @@
             height: 100vh;
             left: 0px;
             transition: left 0.3s ease-in-out;
+            transform: translateX(-250px);
+        }
+        #sidebar.active{
+            transform: translateX(0);
         }
         .navbar{
             background: #1f2d3d;
             color: white;
+        }
+        #toggle-sidebar{
+            cursor: pointer;
         }
         .nav-link {
             color: white;
@@ -44,8 +51,11 @@
         #content {
             flex-grow: 1;
             padding: 20px;
-            margin-left: 250px;
+            margin-left: 0px;
             transition: margin-left 0.3s ease-in-out;
+        }
+        #content.active{
+            margin-left: 250px;
         }
         .chart-card {
             max-width: 400px;
@@ -144,7 +154,11 @@
         
         @media(max-width:768px) {
             #sidebar {
-                transform: translateX(-250px);
+               width: 250px;
+               transform: translateX(-250px);
+            }
+            #sidebar.active{
+                transform: translateX(0);
             }
             #content {
                 margin-left: 0;
@@ -220,16 +234,20 @@
     </div>
    
     <script>
-        document.getElementById("toggle-sidebar").addEventListener("click", function() {
+        document.addEventListener("DOMContentLoaded", function() {
             const sidebar = document.getElementById("sidebar");
             const content = document.getElementById("content");
-            if (sidebar.style.transform === "translateX(0px)") {
-                sidebar.style.transform = "translateX(-250px)";
-                content.style.marginLeft = "0";
-            } else {
-                sidebar.style.transform = "translateX(0px)";
-                content.style.marginLeft = "250px";
-            }
+            const toggleSidebar = document.getElementById("toggle-sidebar");
+
+           // Ensure sidebar starts hidden
+        sidebar.classList.remove("active");
+        content.classList.remove("active");
+
+        toggleSidebar.addEventListener("click", function () {
+            // Toggle sidebar visibility
+            sidebar.classList.toggle("active");
+            content.classList.toggle("active");
+        });
         });
 
         // Chart.js
